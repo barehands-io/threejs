@@ -5,10 +5,20 @@ import styles from "@/styles/Home.module.css";
 import { useEffect } from "react";
 import * as THREE from "three";
 
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
+import Stats from "three/examples/jsm/libs/stats.module";
+import { Scene } from "three";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   useEffect(() => {
+
+
+    // const test  = new SceneInit('myThreeJsCanvas');
+
+
     const scene = new THREE.Scene();
 
     const camera = new THREE.PerspectiveCamera(
@@ -29,7 +39,7 @@ export default function Home() {
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     // document.body.appendChild(renderer.domElement);
 
@@ -55,21 +65,29 @@ export default function Home() {
 
     scene.add(boxMesh);
 
-    const clock = new THREE.Clock()
+    const clock = new THREE.Clock();
+
+    // ADD ORBIT CONTROLS
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+
+    const stats = Stats();
+
+    document.body.appendChild(stats.dom);
+
+    controls.enableDamping = true;
 
     const animate = () => {
 
-    const elapsedTime = clock.getElapsedTime()
-
-    boxMesh.rotation.x += 0.01 * elapsedTime;
-
-
-      // boxMesh.rotation.x += 0.01 * elapsedTime;
+      // boxMesh.rotation.x += 0.01;
       // boxMesh.rotation.y += 0.01;
+
+      stats.update();
+      controls.update();
 
       renderer.render(scene, camera);
 
-      // requestAnimationFrame(animate);
+
 
 
       window.requestAnimationFrame(animate);
