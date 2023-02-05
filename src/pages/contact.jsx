@@ -10,13 +10,7 @@ const Contact = () => {
 
     return (
         <div className="bg-slate-800">
-            <div className={`bg-red-500 absolute`}>Loadded</div>
-            <div className={`h-40`}>
-
                 <BasicThreeScene/>
-
-            </div>
-            Contact US
         </div>
 
     );

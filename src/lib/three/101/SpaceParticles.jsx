@@ -5,7 +5,7 @@ import * as THREE from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
 
-const BasicThreeScene = () => {
+const SpaceParticles = () => {
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -53,6 +53,13 @@ const BasicThreeScene = () => {
                 height: window.innerHeight
             }
 
+            // Create the Three.js camera and add it to the scene
+            const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+            camera.position.x = 0
+            camera.position.y = 0
+            camera.position.z = 2
+            scene.add(camera)
+
             /* ===   // RESIZE THE SCENCE AND ASSETS  with BROWSER resize ==============================  ============================== */
 
             // Event listener for resizing the scene and assets with the browser window
@@ -73,12 +80,9 @@ const BasicThreeScene = () => {
             /* ===   // RESIZE THE SCENE AND ASSETS  with BROWSER resize =========== */
 
 
-            // Create the Three.js camera and add it to the scene
-            const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-            camera.position.x = 0
-            camera.position.y = 0
-            camera.position.z = 2
-            scene.add(camera)
+
+
+
             /* ===   // GUI CONTROLS  ==============================  ============================== */
 
 
@@ -97,6 +101,9 @@ const BasicThreeScene = () => {
 
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+            // set the background color
+            renderer.setClearColor(new THREE.Color("#21282a"), 1);
 
             const clock = new THREE.Clock()
 
@@ -123,10 +130,9 @@ const BasicThreeScene = () => {
 
     return (
         <div className="bg-slate-300">
-            <canvas style={{ height: "200px" }} className={`h-40`} id="myThreeJsCanvas"></canvas>
-            Contact US
+            <canvas  className={`h-40`} id="myThreeJsCanvas"></canvas>
         </div>
     );
 };
 
-export default BasicThreeScene;
+export default SpaceParticles;

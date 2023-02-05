@@ -136,8 +136,7 @@ const BasicThreeScene = () => {
 
     return (
         <div className="bg-slate-300">
-            <canvas style={{ height: "200px" }} className={`h-40`} id="myThreeJsCanvas"></canvas>
-            Contact US
+            <canvas  id="myThreeJsCanvas"></canvas>
         </div>
     );
 };
