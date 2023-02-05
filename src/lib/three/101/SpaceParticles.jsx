@@ -73,7 +73,7 @@ const SpaceParticles = () => {
                 camera.updateProjectionMatrix()
 
                 // Update the renderer size and pixel ratio
-                renderer.setSize(sizes.width, sizes.height)
+                renderer.setSize(sizes.width /2, sizes.height / 2)
                 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
             })
 
@@ -99,7 +99,8 @@ const SpaceParticles = () => {
                 }
             );
 
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            // Set the renderer size and pixel ratio
+            renderer.setSize(window.innerWidth /2, window.innerHeight / 2);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
             // set the background color
