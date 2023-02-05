@@ -6,18 +6,16 @@ import * as THREE from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import BasicThreeScene from "@/lib/three/101/BasicThreeScene";
 
-
 const Contact = () => {
-
 
     return (
         <div className="bg-slate-800">
-
             <div className={`bg-red-500 absolute`}>Loadded</div>
+            <div className={`h-40`}>
 
-            <BasicThreeScene/>
+                <BasicThreeScene/>
 
-
+            </div>
             Contact US
         </div>
 

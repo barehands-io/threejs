@@ -90,17 +90,6 @@ const BasicThreeScene = () => {
             /* ===   // GUI CONTROLS  ==============================  ============================== */
 
 
-            /* ===   // ORBITAL CONTROLS  ==============================  ============================== */
-
-            const controls = new OrbitControls(camera, canvas)
-
-            controls.enableDamping = true
-
-
-
-            /* ===   // ORBITAL CONTROLS  ==============================  ============================== */
-
-
             const renderer = new THREE.WebGLRenderer({
                     canvas: canvas
                 }
@@ -110,8 +99,6 @@ const BasicThreeScene = () => {
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
             const clock = new THREE.Clock()
-
-
 
             const tick = () => {
 
