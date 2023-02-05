@@ -10,11 +10,7 @@ const About = () => {
     return (
         <div>
 
-            <div className={`h-40 bg-pink-300`}>
 
-              PINK BG
-
-            </div>
             <div className={`h-40 bg-amber-300`}>
 
                <SpaceParticles/>

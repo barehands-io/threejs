@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import * as THREE from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+import {TWEEN} from 'three/examples/jsm/libs/tween.module.min'
 
 
 const SpaceParticles = () => {
@@ -22,18 +23,79 @@ const SpaceParticles = () => {
 
             // CREATE THE SCENE
             const scene = new THREE.Scene();
-
             // Objects
             // Create a torus mesh and add it to the scene
-            const geometry = new THREE.TorusGeometry(.7, .2, 16, 100);
+            const sphereGeometry = new THREE.TorusGeometry(.7, .2, 16, 100);
+
+            sphereGeometry.rotateX(THREE.MathUtils.degToRad(90));
+
+            const particlesGeometry = new THREE.BufferGeometry();
+
+            const particlesCnt = 5000;
+
+            const posArray = new Float32Array(particlesCnt * 3);
+
+            for (let i = 0; i < particlesCnt * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 5;
+            }
+
+            particlesGeometry.setAttribute(
+                "position",
+                new THREE.BufferAttribute(posArray, 3)
+            );
+            const particlesMaterial = new THREE.PointsMaterial({
+                transparent: true,
+                size: 0.005,
+                color: "white",
+                // map: loader.load("texture/height.png"),
+            });
+
+            const sphereMaterial = new THREE.PointsMaterial({
+                transparent: true,
+                size: 0.009,
+                color: "white",
+                // map: loader.load("texture/height.png"),
+            });
+
+
+            const sphere = new THREE.Points(sphereGeometry, sphereMaterial);
+
+
+
+            // Initially hide the sphere
+
+            scene.add(sphere);
+
+
+            // const particlesMesh = new THREE.Points(particlesGeometry, material);
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+
+            // load scene after 5 seconds
+
+          // TWEEN ANIMATION
+
+            setTimeout(function() {
+                var tween = new TWEEN.Tween({ opacity: 1 })
+                    .to({ opacity: 0 }, 1000)
+                    .onUpdate(function() {
+                        sphereMaterial.opacity = this.opacity;
+
+                    })
+                    .start();
+            }, 3000);
+
+
+
+
+
+            //
+
 
             // Materials
             const material = new THREE.MeshBasicMaterial()
             material.color = new THREE.Color(0xff0000)
 
             // Mesh
-            const sphere = new THREE.Mesh(geometry, material)
-            scene.add(sphere)
 
 
             // Lights
@@ -42,7 +104,7 @@ const SpaceParticles = () => {
             pointLight.position.x = 2
             pointLight.position.y = 3
             pointLight.position.z = 4
-            scene.add(pointLight)
+            scene.add(pointLight, particlesMesh)
 
             // Object to store the sizes of the window
             /**
@@ -54,7 +116,7 @@ const SpaceParticles = () => {
             }
 
             // Create the Three.js camera and add it to the scene
-            const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+            const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000)
             camera.position.x = 0
             camera.position.y = 0
             camera.position.z = 2
@@ -73,14 +135,11 @@ const SpaceParticles = () => {
                 camera.updateProjectionMatrix()
 
                 // Update the renderer size and pixel ratio
-                renderer.setSize(sizes.width /2, sizes.height / 2)
+                renderer.setSize(sizes.width, sizes.height)
                 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
             })
 
             /* ===   // RESIZE THE SCENE AND ASSETS  with BROWSER resize =========== */
-
-
-
 
 
             /* ===   // GUI CONTROLS  ==============================  ============================== */
@@ -100,11 +159,11 @@ const SpaceParticles = () => {
             );
 
             // Set the renderer size and pixel ratio
-            renderer.setSize(window.innerWidth /2, window.innerHeight / 2);
+            renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
             // set the background color
-            renderer.setClearColor(new THREE.Color("#21282a"), 1);
+            renderer.setClearColor(new THREE.Color("grey"), 1);
 
             const clock = new THREE.Clock()
 
@@ -113,8 +172,9 @@ const SpaceParticles = () => {
                 const elapsedTime = clock.getElapsedTime()
 
                 // Update objects
-                sphere.rotation.y = 4.8 * elapsedTime
+                sphere.rotation.y = 0.2 * elapsedTime
 
+                particlesMesh.rotation.y = -0.1 * elapsedTime;
 
                 // Render
                 renderer.render(scene, camera)
@@ -131,7 +191,7 @@ const SpaceParticles = () => {
 
     return (
         <div className="bg-slate-300">
-            <canvas  className={`h-40`} id="myThreeJsCanvas"></canvas>
+            <canvas className={`h-40`} id="myThreeJsCanvas"></canvas>
         </div>
     );
 };
