@@ -9,91 +9,28 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import Stats from "three/examples/jsm/libs/stats.module";
 import { Scene } from "three";
+import SceneInit from "@/lib/ScenceInit";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   useEffect(() => {
+    const launchScene = new SceneInit("myThreeJsCanvas");
 
+    launchScene.initialize();
 
-    // const test  = new SceneInit('myThreeJsCanvas');
+    launchScene.animate();
 
-
-    const scene = new THREE.Scene();
-
-    const camera = new THREE.PerspectiveCamera(
-      50,
-      window.innerWidth / window.innerHeight,
-      1,
-      1000
-    );
-
-    camera.position.z = 96;
-
-    const canvas = document.getElementById("myThreeJsCanvas");
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas: canvas,
-      antialias: true,
-    });
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    // document.body.appendChild(renderer.domElement);
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    ambientLight.castShadow = true;
-    scene.add(ambientLight);
-
-    const spotLight = new THREE.SpotLight(0xffffff, 0.1);
-
-    spotLight.castShadow = true;
-
-    spotLight.position.set(0, 64, 32);
-
-    scene.add(spotLight);
-
-    // add geometry
-
-    const geometry = new THREE.BoxGeometry(32, 32, 32);
+    const boxGeometry = new THREE.BoxGeometry(16, 16, 16);
 
     const boxMaterial = new THREE.MeshNormalMaterial();
 
-    const boxMesh = new THREE.Mesh(geometry, boxMaterial);
+    const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
 
-    scene.add(boxMesh);
-
-    const clock = new THREE.Clock();
-
-    // ADD ORBIT CONTROLS
-
-    const controls = new OrbitControls(camera, renderer.domElement);
-
-    const stats = Stats();
-
-    document.body.appendChild(stats.dom);
-
-    controls.enableDamping = true;
-
-    const animate = () => {
-
-      // boxMesh.rotation.x += 0.01;
-      // boxMesh.rotation.y += 0.01;
-
-      stats.update();
-      controls.update();
-
-      renderer.render(scene, camera);
+    launchScene.scene.add(boxMesh);
 
 
 
-
-      window.requestAnimationFrame(animate);
-    };
-
-    animate();
   }, []);
 
   return (

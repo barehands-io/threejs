@@ -1,95 +1,106 @@
-import * as THREE from "three";
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import Stats from 'three/examples/jsm/libs/stats.module';
 
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+export default class SceneInit {
+  constructor(canvasId) {
+    // NOTE: Core components to initialize Three.js app.
+    this.scene = undefined;
+    this.camera = undefined;
+    this.renderer = undefined;
 
-import Stats from "three/examples/jsm/libs/stats.module";
-import { Scene } from "three";
+    // NOTE: Camera params;
+    this.fov = 45;
+    this.nearPlane = 1;
+    this.farPlane = 1000;
+    this.canvasId = canvasId;
 
-export class SceneInit {
+    // NOTE: Additional components.
+    this.clock = undefined;
+    this.stats = undefined;
+    this.controls = undefined;
 
+    // NOTE: Lighting is basically required.
+    this.ambientLight = undefined;
+    this.directionalLight = undefined;
+  }
 
+  initialize() {
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(
+      this.fov,
+      window.innerWidth / window.innerHeight,
+      1,
+      1000
+    );
+    this.camera.position.z = 48;
 
+    // NOTE: Specify a canvas which is already created in the HTML.
+    const canvas = document.getElementById(this.canvasId);
+    this.renderer = new THREE.WebGLRenderer({
+      canvas,
+      // NOTE: Anti-aliasing smooths out the edges.
+      antialias: true,
+    });
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    // this.renderer.shadowMap.enabled = true;
+    document.body.appendChild(this.renderer.domElement);
 
-        const test  = new SceneInit('myThreeJsCanvas');
-    
-    
-        const scene = new THREE.Scene();
-    
-        const camera = new THREE.PerspectiveCamera(
-          50,
-          window.innerWidth / window.innerHeight,
-          1,
-          1000
-        );
-    
-        camera.position.z = 96;
-    
-        const canvas = document.getElementById("myThreeJsCanvas");
-    
-        const renderer = new THREE.WebGLRenderer({
-          canvas: canvas,
-          antialias: true,
-        });
-    
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    
-        // document.body.appendChild(renderer.domElement);
-    
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        ambientLight.castShadow = true;
-        scene.add(ambientLight);
-    
-        const spotLight = new THREE.SpotLight(0xffffff, 0.1);
-    
-        spotLight.castShadow = true;
-    
-        spotLight.position.set(0, 64, 32);
-    
-        scene.add(spotLight);
-    
-        // add geometry
-    
-        const geometry = new THREE.BoxGeometry(32, 32, 32);
-    
-        const boxMaterial = new THREE.MeshNormalMaterial();
-    
-        const boxMesh = new THREE.Mesh(geometry, boxMaterial);
-    
-        scene.add(boxMesh);
-    
-        const clock = new THREE.Clock();
-    
-        // ADD ORBIT CONTROLS
-    
-        const controls = new OrbitControls(camera, renderer.domElement);
-    
-        const stats = Stats();
-    
-        document.body.appendChild(stats.dom);
-    
-        controls.enableDamping = true;
-    
-        const animate = () => {
-    
-          // boxMesh.rotation.x += 0.01;
-          // boxMesh.rotation.y += 0.01;
-    
-          stats.update();
-          controls.update();
-    
-          renderer.render(scene, camera);
-    
-    
-    
-    
-          window.requestAnimationFrame(animate);
-        };
-    
-        animate();
-      }, []);
+    this.clock = new THREE.Clock();
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+
+    // NOTE: Enable damping to slow down the camera.
+
+    this.controls.enableDamping = true;
 
 
+    this.stats = Stats();
+    document.body.appendChild(this.stats.dom);
 
+    // ambient light which is for the whole scene
+    this.ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    this.ambientLight.castShadow = true;
+    this.scene.add(this.ambientLight);
+
+    // directional light - parallel sun rays
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    // this.directionalLight.castShadow = true;
+    this.directionalLight.position.set(0, 32, 64);
+    this.scene.add(this.directionalLight);
+
+    // if window resizes
+    window.addEventListener('resize', () => this.onWindowResize(), false);
+
+    // NOTE: Load space background.
+    // this.loader = new THREE.TextureLoader();
+    // this.scene.background = this.loader.load('./pics/space.jpeg');
+
+    // NOTE: Declare uniforms to pass into glsl shaders.
+    // this.uniforms = {
+    //   u_time: { type: 'f', value: 1.0 },
+    //   colorB: { type: 'vec3', value: new THREE.Color(0xfff000) },
+    //   colorA: { type: 'vec3', value: new THREE.Color(0xffffff) },
+    // };
+  }
+
+  animate() {
+    // NOTE: Window is implied.
+    // requestAnimationFrame(this.animate.bind(this));
+    window.requestAnimationFrame(this.animate.bind(this));
+    this.render();
+    this.stats.update();
+    this.controls.update();
+  }
+
+  render() {
+    // NOTE: Update uniform data on each render.
+    // this.uniforms.u_time.value += this.clock.getDelta();
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  onWindowResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+  }
 }
